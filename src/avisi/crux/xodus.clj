@@ -1,7 +1,7 @@
 (ns avisi.crux.xodus
-  (:require [crux.kv :as kv]
-            [crux.system :as sys]
-            [crux.memory :as mem])
+  (:require [xtdb.kv :as kv]
+            [xtdb.system :as sys]
+            [xtdb.memory :as mem])
   (:import [java.io Closeable]
            [jetbrains.exodus.env Environments Environment Store StoreConfig Transaction Cursor TransactionalExecutable]
            [jetbrains.exodus ArrayByteIterable ByteIterable]))
@@ -63,12 +63,12 @@
                                  (if-let [v-bytes (some-> v mem/->on-heap ArrayByteIterable.)]
                                    (.put store tx k-bytes v-bytes)
                                    (.delete store tx k-bytes)))))))
-  (compact [_]
+  (compact [_])
     ;; Maybe we could call .gc on the env, but that won't do what they want I think
-    )
-  (fsync [_]
+
+  (fsync [_])
     ;; This is not a thing in Xodus
-    )
+
   (count-keys [{:keys [^Environment env]}]
     (let [tx ^Transaction (.beginReadonlyTransaction env)]
       (try
